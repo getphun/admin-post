@@ -1,0 +1,144 @@
+<?php $this->partial('shared/header'); ?>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <strong class="text-danger">TODO</strong> Filter post
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    Total result: <?= number_format($total, 0, '.','.'); ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="page-header">
+                <?php if($this->can_i->create_post): ?>
+                <a class="btn btn-primary pull-right" href="<?= $this->router->to('adminPostEdit', ['id'=>0], ['ref'=>$reff]) ?>">Create New</a>
+                <?php endif; ?>
+                <h3>Posts</h3>
+            </div>
+            
+            <?php if($posts): ?>
+            <?php
+                $can_delete     = $this->can_i->remove_post;
+                $can_edit       = $this->can_i->update_post;
+                $can_edit_all   = $this->can_i->update_post_all;
+                $can_delete_all = $this->can_i->remove_post_all;
+                $can_statistic  = $this->can_i->read_post_statistic;
+            ?>
+            
+            <div class="list-group">
+                <?php foreach($posts as $post): ?>
+                <div class="list-group-item">
+                    
+                    <div class="btn-group btn-group-xs pull-right" role="group">
+                        <?php
+                            $can_edit_post   = $can_edit_all || ($post->user->id == $this->user->id && $can_edit);
+                            $can_delete_post = $can_delete_all || ($post->user->id == $this->user->id && $can_delete);
+                        ?>
+                        
+                        <?php if($can_edit_post): ?>
+                        <a href="<?= $this->router->to('adminPostEdit', ['id'=>$post->id], ['ref'=>$reff]) ?>" class="btn btn-default" title="Edit">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </a>
+                        <?php endif; ?>
+                        
+                        <button id="post-<?= $post->id ?>" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-xs">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="post-<?= $post->id ?>">
+                            <li>
+                                <a href="<?= $post->page ?>">
+                                    <i class="fa fa-external-link" aria-hidden="true"></i> View page
+                                </a>
+                            </li>
+                        <?php if($can_statistic): ?>
+                            <li>
+                                <a href="<?= $this->router->to('adminPostStatistic', ['id'=>$post->id], ['ref'=>$reff]) ?>">
+                                    <i class="fa fa-area-chart" aria-hidden="true"></i> Statistic
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php if($can_delete_post): ?>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a href="<?= $this->router->to('adminPostRemove', ['id'=>$post->id], ['ref'=>$reff]) ?>" data-confirm="Delete Confirmation" data-confirm-message="Are you sure want to delete this post? This action can't be undone." title="Delete" aria-label="Delete">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        </ul>
+                        
+                    </div>
+                    
+                    <h4 class="list-group-item-heading">
+                        <?= $post->title ?>
+                    </h4>
+                    <p class="list-group-item-text small">
+                        <span title="Created"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> <?= $post->created->format('M d, Y H:i') ?></span>
+                        &middot;
+                        <span title="Updated"><i class="fa fa-calendar-minus-o" aria-hidden="true"></i> <?= $post->updated->format('M d, Y H:i') ?></span>
+                        
+                        <?php if($post->status == 1): ?>
+                            &middot;
+                            <span class="text-danger" title="Draft">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                Draft
+                            </span>
+                        <?php elseif($post->status == 2): ?>
+                            &middot;
+                            <span class="text-success" title="Editor">
+                                <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                Editor
+                            </span>
+                        <?php elseif($post->status == 3): ?>
+                            &middot;
+                            <span class="text-primary" title="Scheduled">
+                                <i class="fa fa-clock-o" aria-hidden="true"></i> <?= $post->published->format('M d, Y H:i') ?>
+                            </span>
+                        <?php elseif($post->status == 4): ?>
+                            &middot;
+                            <span title="Published">
+                                <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                                <?= $post->published->format('M d, Y H:i') ?>
+                            </span>
+                        <?php endif; ?>
+                    </p>
+                    <p class="list-group-item-text small">
+                        <span title="Writer">
+                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            <?= $post->user->fullname ?>
+                        </span>
+                        <?php if($post->featured): ?>
+                            &middot;
+                            <span title="Featured" class="text-success">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                Featured
+                            </span>
+                        <?php endif; ?>
+                        <?php if($post->editor_pick): ?>
+                            &middot;
+                            <span title="Editor Pick" class="text-warning">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                                Editor Pick
+                            </span>
+                        <?php endif; ?>
+                    </p>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <?php
+                if($pagination)
+                    $this->partial('shared/pagination', ['pagination'=>$pagination]);
+            ?>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<?php $this->partial('shared/footer'); ?>

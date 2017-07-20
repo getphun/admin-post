@@ -1,0 +1,50 @@
+<?php $this->partial('shared/header'); ?>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <?php if($statistic): ?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Statistic
+                </div>
+                <div class="panel-body">
+                    Views: <?= number_format($statistic->views, 0, '.', '.') ?><br>
+                    Likes: <?= number_format($statistic->likes, 0, '.', '.') ?><br>
+                    Shares: <?= number_format($statistic->shares, 0, '.', '.') ?><br>
+                    Comments: <?= number_format($statistic->comments, 0, '.', '.') ?><br>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+        <div class="col-md-9">
+            <div class="page-header">
+                <?php if($back): ?>
+                <a class="btn btn-primary pull-right" href="<?= $back ?>">Back</a>
+                <?php endif; ?>
+                <h3><?= hs($post->title) ?></h3>
+            </div>
+            
+            <?php if($histories): ?>
+            
+            <div class="list-group">
+                <?php foreach($histories as $hist): ?>
+                <div class="list-group-item">
+                    
+                    <h4 class="list-group-item-heading">
+                        <?= $hist->user->fullname ?>
+                        <?= $hist->type->label ?>
+                        The Post
+                    </h4>
+                    <p class="list-group-item-text small">
+                        <span title="Created"><i class="fa fa-calendar-plus-o" aria-hidden="true"></i> <?= $hist->created->format('M d, Y H:i') ?></span>
+                    </p>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<?php $this->partial('shared/footer'); ?>

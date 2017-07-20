@@ -1,0 +1,86 @@
+<?php $this->partial('shared/header'); ?>
+
+<form method="post" class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <div class="pull-right">
+                    <a class="btn btn-default" href="<?= $ref ?>" type="button">Cancel</a>
+                    <button class="btn btn-primary">Save</button>
+                </div>
+                <h3><?= $title ?></h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <?php
+                    $slug_field = false;
+                    if(!isset($object->id) || $this->can_i->update_post_slug)
+                        $slug_field = true;
+                ?>
+                <div class="col-md-<?= ($slug_field?8:12) ?>">
+                    <?= $this->form->field('title'); ?>
+                </div>
+                <?php if($slug_field): ?>
+                <div class="col-md-4">
+                    <?= $this->form->field('slug'); ?>
+                </div>
+                <?php else: ?>
+                <input type="hidden" value="<?= ($object->slug??'') ?>" name="slug">
+                <?php endif; ?>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $this->form->field('content'); ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <?= $this->form->field('cover'); ?>
+                    <?= $this->form->field('cover_label'); ?>
+                    <?php if($this->can_i->read_post_category): ?>
+                    <?= $this->form->field('category', $categories); ?>
+                    <?php endif; ?>
+                </div>
+                <div class="col-md-4">
+                    <?= $this->form->field('embed'); ?>
+                    <?php if($this->can_i->read_post_tag): ?>
+                    <?= $this->form->field('tag', $tags); ?>
+                    <?php endif; ?>
+                </div>
+                <div class="col-md-4">
+                    <?= $this->form->field('source'); ?>
+                    <?= $this->form->field('status', $statuses); ?>
+                    <?= $this->form->field('published'); ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <?= $this->form->field('schema_type'); ?>
+                    <?= $this->form->field('meta_title'); ?>
+                    <?= $this->form->field('meta_description'); ?>
+                    <?= $this->form->field('meta_keywords'); ?>
+                </div>
+            </div>
+            <div class="row">
+                <?php if($this->can_i->set_post_featured): ?>
+                <div class="col-md-6">
+                    <?= $this->form->field('featured'); ?>
+                </div>
+                <?php endif; ?>
+                <?php if($this->can_i->set_post_editorpick): ?>
+                <div class="col-md-6">
+                    <?= $this->form->field('editor_pick'); ?>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</form>
+
+<?php $this->partial('shared/footer'); ?>
