@@ -223,7 +223,7 @@ class PostController extends \AdminController
             
             if(!property_exists($object, $prop))
                 continue;
-            $object_prop = $object->$prop;
+            $object_prop = $object->$prop ?? [];
             unset($object->$prop);
             
             if(!module_exists($module))
