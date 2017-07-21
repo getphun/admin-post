@@ -1,0 +1,65 @@
+<div class="form-group<?= ($error ? ' has-error' : '') ?>">
+    <?php if(!isset($nolabel) || !$nolabel): ?>
+    <label for="<?= $id ?>"><?= $label ?></label>
+    <?php endif; ?>
+    
+    <?php
+        $helper = $error ? $error : $desc;
+        $opts = group_by_prop($options, 'parent');
+        if(!is_array($value))
+            $value = (array)$value;
+        
+        $recursiver = function($parent,$level=0) use($opts, $id, $name, $value, $helper, &$recursiver){
+            if(!isset($opts[$parent]))
+                return;
+            
+            $tx = '';
+            
+            $child_level = $level + 1;
+            
+            foreach($opts[$parent] as $opt){
+                $opt = (object)$opt;
+                
+                $opt_attr = [
+                    'type'  => 'checkbox',
+                    'name'  => $name . '[]',
+                    'value' => $opt->id,
+                    'id'    => sprintf('%s-%s', $id, $opt->id),
+                    'class' => 'styled checkbox-tree field-' . $name,
+                    'data-parent' => sprintf('%s-%s', $id, $opt->parent),
+                    'data-canal'  => $opt->canal
+                ];
+                
+                if($helper)
+                    $opt_attr['aria-describedby'] = $id . '-help-block';
+                
+                if(in_array($opt->id, $value))
+                    $opt_attr['checked'] = 'checked';
+                
+                $padding_left = (1+$level) * 20;
+                
+                $tx.= '<div class="checkbox" style="padding-left:' . $padding_left . 'px;">';
+                $tx.=   '<input ' . array_to_attr($opt_attr) . '>';
+                $tx.=   '<label for="' . $opt_attr['id'] . '">' . $opt->name . '</label>';
+                $tx.= '</div>';
+                
+                if(isset($opts[$opt->id]))
+                    $tx.= $recursiver($opt->id, ($child_level));
+            }
+            
+            return $tx;
+        }
+    ?>
+    
+    <div class="panel panel-default panel-form">
+        <div class="panel-body">
+            <?php if(isset($opts[0])): ?>
+            <?= $recursiver(0); ?>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <?php if($helper): ?>
+    <span id="<?= $id ?>-help-block" class="help-block"><?= $helper ?></span>
+    <?php endif; ?>
+</div>

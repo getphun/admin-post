@@ -72,7 +72,6 @@
                             </li>
                         <?php endif; ?>
                         </ul>
-                        
                     </div>
                     
                     <h4 class="list-group-item-heading">
@@ -85,8 +84,7 @@
                         
                         <?php if($post->status == 1): ?>
                             &middot;
-                            <span class="text-danger" title="Draft">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            <span class="label label-warning" title="Draft">
                                 Draft
                             </span>
                         <?php elseif($post->status == 2): ?>
@@ -97,8 +95,8 @@
                             </span>
                         <?php elseif($post->status == 3): ?>
                             &middot;
-                            <span class="text-primary" title="Scheduled">
-                                <i class="fa fa-clock-o" aria-hidden="true"></i> <?= $post->published->format('M d, Y H:i') ?>
+                            <span class="label label-info" title="Scheduled for publish">
+                                <i class="fa fa-clock-o" aria-hidden="true"></i> <?= $post->published->format('M d, H:i') ?>
                             </span>
                         <?php elseif($post->status == 4): ?>
                             &middot;

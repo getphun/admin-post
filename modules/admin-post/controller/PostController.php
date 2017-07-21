@@ -29,7 +29,7 @@ class PostController extends \AdminController
             'prop'  => 'category',
             'table' => 'post_category',
             'chain' => 'PostCategory\\Model\\PostCategoryChain',
-            'model' => 'PostCategory\Model\PostCategory',
+            'model' => 'PostCategory\\Model\\PostCategory',
             'perms' => 'read_post_category'
         ],
         'post-tag' => [
@@ -39,6 +39,16 @@ class PostController extends \AdminController
             'model' => 'PostTag\Model\PostTag',
             'perms' => 'read_post_tag',
             'opts'  => 'tags'
+        ]
+    ];
+    
+    private $oo_props = [
+        'post-canal' => [
+            'prop'  => 'canal',
+            'table' => 'post_canal',
+            'model' => 'PostCanal\\Model\\PostCanal',
+            'perms' => 'read_post_canal',
+            'opts'  => 'canals'
         ]
     ];
     
@@ -177,6 +187,29 @@ class PostController extends \AdminController
             $params[$args['opts']] = array_column($oo_obj, 'name', 'id');
         }
         
+        // get preset and/or posted prop object
+        foreach($this->oo_props as $module => $args){
+            if(!module_exists($module))
+                continue;
+            if(!$this->can_i->{$args['perms']})
+                continue;
+            $params[$args['opts']] = [];
+            
+            $oo_id = null;
+            if($id)
+                $oo_id = $object->{$args['prop']};
+            
+            if($this->req->method == 'POST')
+                $oo_id = $this->req->getPost($args['prop']);
+            
+            if(!$oo_id)
+                continue;
+            
+            $oo_obj = $args['model']::get(['id'=>$oo_id], false);
+            if($oo_obj)
+                $params[$args['opts']][$oo_obj->id] = $oo_obj->name;
+        }
+        
         // VALIDATE THE FORM
         if(false === ($form=$this->form->validate('admin-post', $object)))
             return $this->respond('post/edit', $params);
@@ -186,21 +219,24 @@ class PostController extends \AdminController
         // let see the chains to remove/create
         $chains = [];
         foreach($this->oo_chains as $module => $args){
+            $prop = $args['prop'];
+            
+            if(!property_exists($object, $prop))
+                continue;
+            $object_prop = $object->$prop;
+            unset($object->$prop);
+            
             if(!module_exists($module))
                 continue;
             if(!$this->can_i->{$args['perms']})
                 continue;
             
-            $prop = $args['prop'];
-            
             $chains[$module] = [
-                'insert' => array_diff($object->$prop, $old->$prop),
-                'remove' => array_diff($old->$prop, $object->$prop)
+                'insert' => array_diff($object_prop, $old->$prop),
+                'remove' => array_diff($old->$prop, $object_prop)
             ];
             
-            $oo_ids = array_unique(array_merge($object->$prop, $old->$prop));
-            
-            unset($object->$prop);
+            $oo_ids = array_unique(array_merge($object_prop, $old->$prop));
             
             // now call event update of each object
             $oo_obj = $args['model']::get(['id'=>$oo_ids], true);
@@ -208,6 +244,27 @@ class PostController extends \AdminController
                 continue;
             foreach($oo_obj as $obj)
                 $this->fire($module . ':updated', $obj, $obj);
+        }
+        
+        // let see the effected ex-object
+        foreach($this->oo_props as $module => $args){
+            $prop = $args['prop'];
+            
+            if(!property_exists($object, $prop))
+                continue;
+            
+            if(!module_exists($module))
+                unset($object->$prop);
+            if(!$this->can_i->{$args['perms']})
+                unset($object->$prop);
+            
+            if(!property_exists($object, $prop) || !$object->$prop)
+                continue;
+            
+            $oo_obj = $args['model']::get(['id'=>$object->$prop], false);
+            if(!$oo_obj)
+                continue;
+            $this->fire($module . ':updated', $oo_obj, $oo_obj);
         }
         
         // post.slug

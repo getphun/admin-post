@@ -11,4 +11,14 @@ $(function(){
     });
     $('#field-status').change();
     
+    $('#field-canal').change(function(){
+        var $this = $(this);
+        var val = parseInt($this.val());
+        
+        if(!val)
+            return $('.field-category').prop('disabled', false);
+        $('.field-category:not([data-canal='+val+'])').prop('disabled', true);
+        $('.field-category[data-canal='+val+']').prop('disabled', false);
+    });
+    $('#field-canal').change();
 });

@@ -41,13 +41,18 @@
                 <div class="col-md-4">
                     <?= $this->form->field('cover'); ?>
                     <?= $this->form->field('cover_label'); ?>
-                    <?php if($this->can_i->read_post_category): ?>
+                    <?php if(module_exists('post-canal') && $this->can_i->read_post_canal): ?>
+                        <?= $this->form->field('canal', $canals); ?>
+                    <?php else: ?>
+                        <input type="hidden" id="field-canal" value="<?= $object->canal ?? '0' ?>">
+                    <?php endif; ?>
+                    <?php if(module_exists('post-category') && $this->can_i->read_post_category): ?>
                     <?= $this->form->field('category', $categories); ?>
                     <?php endif; ?>
                 </div>
                 <div class="col-md-4">
                     <?= $this->form->field('embed'); ?>
-                    <?php if($this->can_i->read_post_tag): ?>
+                    <?php if(module_exists('post-tag') && $this->can_i->read_post_tag): ?>
                     <?= $this->form->field('tag', $tags); ?>
                     <?php endif; ?>
                 </div>

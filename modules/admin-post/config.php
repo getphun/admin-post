@@ -16,6 +16,7 @@ return [
         'theme/admin/post/edit.phtml'           => [ 'install', 'remove', 'update' ],
         'theme/admin/post/statistic.phtml'      => [ 'install', 'remove', 'update' ],
         'theme/admin/static/js/admin-post.js'   => [ 'install', 'remove', 'update' ],
+        'theme/admin/form/post_checkbox-tree.phtml' => [ 'install', 'remove', 'update' ],
         'etc/post/trash'                        => [ 'install', 'remove' ]
     ],
     '__dependencies' => [
@@ -204,8 +205,14 @@ return [
                 'rules'     => []
             ],
             
+            'canal' => [
+                'type'      => 'select-ajax',
+                'label'     => 'Canal',
+                'source'    => 'adminPostCanalFilter',
+                'rules'     => []
+            ],
             'category' => [
-                'type'      => 'checkbox-tree',
+                'type'      => 'post_checkbox-tree',
                 'label'     => 'Categories',
                 'rules'     => []
             ],
