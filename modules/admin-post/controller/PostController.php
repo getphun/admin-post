@@ -69,8 +69,11 @@ class PostController extends \AdminController
             2 => 'Editor'
         ];
         
+        $worker_exists = module_exists('worker');
+        
         if($this->can_i->publish_post){
-            $opts[3] = 'Scheduled';
+            if($worker_exists)
+                $opts[3] = 'Scheduled';
             $opts[4] = 'Published';
             
             return $opts;
