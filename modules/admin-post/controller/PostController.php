@@ -35,8 +35,8 @@ class PostController extends \AdminController
         'post-tag' => [
             'prop'  => 'tag',
             'table' => 'post_tag',
-            'chain' => 'PostTag\Model\PostTagChain',
-            'model' => 'PostTag\Model\PostTag',
+            'chain' => 'PostTag\\Model\\PostTagChain',
+            'model' => 'PostTag\\Model\\PostTag',
             'perms' => 'read_post_tag',
             'opts'  => 'tags'
         ]
@@ -50,6 +50,15 @@ class PostController extends \AdminController
             'perms' => 'read_post_canal',
             'opts'  => 'canals'
         ]
+    ];
+    
+    private $oo_models = [
+        'post'                  => 'Post\\Model\\Post',
+        'post_content'          => 'Post\\Model\\PostContent',
+        'post_category_chain'   => 'PostCategory\\Model\\PostCategoryChain',
+        'post_history'          => 'AdminPost\\Model\\PostHistory',
+        'post_statistic'        => 'Post\\Model\\PostStatistic',
+        'post_tag_chain'        => 'PostTag\\Model\\PostTagChain'
     ];
     
     private function _defaultParams(){
@@ -467,7 +476,7 @@ class PostController extends \AdminController
         }
         
         // save the data
-        $trash = ['post' => $object];
+        $trash = [$this->oo_models['post'] => $object];
         
         Post::remove($object->id);
         
@@ -480,7 +489,7 @@ class PostController extends \AdminController
             if(!$oo_chain)
                 continue;
             
-            $trash[$args['table'].'_chain'] = $oo_chain;
+            $trash[$args['chain']] = $oo_chain;
             $oo_ids = array_column($oo_chain, $args['table']);
             $oo_obj = $args['model']::get(['id'=>$oo_ids], true);
             if(!$oo_obj)
@@ -495,14 +504,14 @@ class PostController extends \AdminController
         // post content 
         $post_content = PContent::get(['post'=>$object->id], false);
         if($post_content){
-            $trash['post_content'] = $post_content;
+            $trash[$this->oo_models['post_content']] = $post_content;
             PContent::remove($post_content->id);
         }
         
         // post statistic 
         $pstat = PStatistic::get(['post'=>$object->id], false);
         if($pstat){
-            $trash['post_statistic'] = $pstat;
+            $trash[$this->oo_models['post_statistic']] = $pstat;
             PStatistic::remove($pstat->id);
         }
         
@@ -514,7 +523,7 @@ class PostController extends \AdminController
         ]);
         $phist = PHistory::get(['post'=>$object->id], true);
         if($phist){
-            $trash['post_history'] = $phist;
+            $trash[$this->oo_models['post_history']] = $phist;
             PHistory::remove(['post'=>$object->id]);
         }
         
