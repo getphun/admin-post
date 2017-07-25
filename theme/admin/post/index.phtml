@@ -47,31 +47,35 @@
                         </a>
                         <?php endif; ?>
                         
+                        <?php if($post->status == 4 || $can_statistic || $can_delete_post): ?>
                         <button id="post-<?= $post->id ?>" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-xs">
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="post-<?= $post->id ?>">
-                            <li>
-                                <a href="<?= $post->page ?>">
-                                    <i class="fa fa-external-link" aria-hidden="true"></i> View page
-                                </a>
-                            </li>
-                        <?php if($can_statistic): ?>
-                            <li>
-                                <a href="<?= $this->router->to('adminPostStatistic', ['id'=>$post->id], ['ref'=>$reff]) ?>">
-                                    <i class="fa fa-area-chart" aria-hidden="true"></i> Statistic
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                        <?php if($can_delete_post): ?>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="<?= $this->router->to('adminPostRemove', ['id'=>$post->id], ['ref'=>$reff]) ?>" data-confirm="Delete Confirmation" data-confirm-message="Are you sure want to delete this post? This action can't be undone." title="Delete" aria-label="Delete">
-                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                </a>
-                            </li>
-                        <?php endif; ?>
+                            <?php if($post->status == 4): ?>
+                                <li>
+                                    <a href="<?= $post->page ?>">
+                                        <i class="fa fa-external-link" aria-hidden="true"></i> View page
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            <?php if($can_statistic): ?>
+                                <li>
+                                    <a href="<?= $this->router->to('adminPostStatistic', ['id'=>$post->id], ['ref'=>$reff]) ?>">
+                                        <i class="fa fa-area-chart" aria-hidden="true"></i> Statistic
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            <?php if($can_delete_post): ?>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="<?= $this->router->to('adminPostRemove', ['id'=>$post->id], ['ref'=>$reff]) ?>" data-confirm="Delete Confirmation" data-confirm-message="Are you sure want to delete this post? This action can't be undone." title="Delete" aria-label="Delete">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                         </ul>
+                        <?php endif; ?>
                     </div>
                     
                     <h4 class="list-group-item-heading">
