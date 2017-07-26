@@ -89,12 +89,13 @@
                         <?php if($post->status == 1): ?>
                             &middot;
                             <span class="label label-warning" title="Draft">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                 Draft
                             </span>
                         <?php elseif($post->status == 2): ?>
                             &middot;
-                            <span class="text-success" title="Editor">
-                                <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                            <span class="label label-success" title="Editor">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
                                 Editor
                             </span>
                         <?php elseif($post->status == 3): ?>
@@ -112,9 +113,16 @@
                     </p>
                     <p class="list-group-item-text small">
                         <span title="Writer">
-                            <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                             <?= $post->user->fullname ?>
                         </span>
+                        <?php if($post->status > 2): ?>
+                            &middot;
+                            <span title="Publisher">
+                                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                                <?= $post->publisher->fullname ?>
+                            </span>
+                        <?php endif; ?>
                         <?php if($post->featured): ?>
                             &middot;
                             <span title="Featured" class="text-success">
@@ -130,6 +138,29 @@
                             </span>
                         <?php endif; ?>
                     </p>
+                    <?php if($post->statistic): ?>
+                        <p class="list-group-item-text small">
+                            <span title="Pageviews">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                <?= number_format($post->statistic->views, 0, '.', '.'); ?>
+                            </span>
+                            &middot;
+                            <span title="Likes">
+                                <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                                <?= number_format($post->statistic->likes, 0, '.', '.'); ?>
+                            </span>
+                            &middot;
+                            <span title="Shares">
+                                <i class="fa fa-share-alt" aria-hidden="true"></i>
+                                <?= number_format($post->statistic->shares, 0, '.', '.'); ?>
+                            </span>
+                            &middot;
+                            <span title="Comments">
+                                <i class="fa fa-comments-o" aria-hidden="true"></i>
+                                <?= number_format($post->statistic->comments, 0, '.', '.'); ?>
+                            </span>
+                        </p>
+                    <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
             </div>

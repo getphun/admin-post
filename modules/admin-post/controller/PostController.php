@@ -404,7 +404,7 @@ class PostController extends \AdminController
         
         $posts = Post::getX($cond, $rpp, $page, 'updated DESC');
         if($posts)
-            $params['posts'] = \Formatter::formatMany('post', $posts, false, ['user']);
+            $params['posts'] = \Formatter::formatMany('post', $posts, false, ['user', 'publisher', 'statistic']);
         
         $params['total'] = $total = Post::countX($cond);
         
