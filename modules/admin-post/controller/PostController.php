@@ -102,8 +102,6 @@ class PostController extends \AdminController
         return $opts;
     }
     
-    
-    
     public function editAction(){
         if(!$this->user->login)
             return $this->show404();
