@@ -71,7 +71,7 @@ return [
                 'order' => 10,
                 'submenu' => [
                     'post' => [
-                        'label' => 'Post',
+                        'label' => 'All Post',
                         'perms' => 'read_post',
                         'target' => 'adminPost',
                         'order' => 30
