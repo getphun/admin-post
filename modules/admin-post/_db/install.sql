@@ -26,3 +26,4 @@ CREATE TABLE IF NOT EXISTS `post_history` (
     `type` TINYINT DEFAULT 2,
     `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE INDEX `by_post` ON `post_history` ( `post` );
