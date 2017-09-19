@@ -3,11 +3,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <strong class="text-danger">TODO</strong> Filter post
-                </div>
-            </div>
+            <form>
+                <?= $this->form->field('q'); ?>
+                <div class="form-group text-right">
+                    <button class="btn btn-default">Find</button>
+                </diV>
+            </form>
             <div class="panel panel-default">
                 <div class="panel-body">
                     Total result: <?= number_format($total, 0, '.','.'); ?>

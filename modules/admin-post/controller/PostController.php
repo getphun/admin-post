@@ -399,6 +399,8 @@ class PostController extends \AdminController
         
         if(!$this->can_i->read_post_all)
             $cond['user'] = $this->user->id;
+        if($this->req->getQuery('q'))
+            $cond['q'] = $this->req->getQuery('q');
         
         $posts = Post::getX($cond, $rpp, $page, 'updated DESC');
         if($posts)
@@ -408,6 +410,8 @@ class PostController extends \AdminController
         
         if($total > $rpp)
             $params['pagination'] = \calculate_pagination($page, $rpp, $total, 10, $cond);
+        
+        $this->form->setForm('admin-post-index');
         
         return $this->respond('post/index', $params);
     }

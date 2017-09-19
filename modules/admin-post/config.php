@@ -238,6 +238,15 @@ return [
                 ],
                 'rules' => []
             ]
+        ],
+        
+        'admin-post-index' => [
+            'q' => [
+                'type' => 'search',
+                'label'=> 'Find Post',
+                'nolabel'=> true,
+                'rules'=> []
+            ]
         ]
     ]
 ];
