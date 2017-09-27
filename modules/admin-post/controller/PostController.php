@@ -330,6 +330,10 @@ class PostController extends \AdminController
             $object->updated = null;
             if(false === Post::set($object, $id))
                 throw new \Exception(Post::lastError());
+            
+            // save slug changes
+            if(isset($object->slug) && $object->slug != $old->slug && module_exists('slug-history'))
+                $this->slug->create('post', $id, $old->slug, $object->slug);
         }
         
         if($object_content)

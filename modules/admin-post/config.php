@@ -24,6 +24,7 @@ return [
         'post',
         '/post-category',
         '/post-tag',
+        '/slug-history',
         'site-param'
     ],
     '_services' => [],
