@@ -128,7 +128,10 @@ return [
             'content' => [
                 'type'      => 'wysiwyg',
                 'label'     => 'Content',
-                'rules'     => []
+                'rules'     => [],
+                'filters'   => [
+                    'tinymce' => true
+                ]
             ],
             'status' => [
                 'type'      => 'select',
