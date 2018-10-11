@@ -116,7 +116,7 @@
                             <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                             <?= $post->user->fullname ?>
                         </span>
-                        <?php if($post->status > 2): ?>
+                        <?php if($post->status > 2 && $post->publisher): ?>
                             &middot;
                             <span title="Publisher">
                                 <i class="fa fa-user-circle" aria-hidden="true"></i>
