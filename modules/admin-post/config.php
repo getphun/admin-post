@@ -31,7 +31,8 @@ return [
     '_autoload' => [
         'classes' => [
             'AdminPost\\Controller\\PostController' => 'modules/admin-post/controller/PostController.php',
-            'AdminPost\\Model\\PostHistory' => 'modules/admin-post/model/PostHistory.php'
+            'AdminPost\\Model\\PostHistory' => 'modules/admin-post/model/PostHistory.php',
+            'AdminPost\\Event\\GalleryEvent' => 'modules/admin-post/event/GalleryEvent.php'
         ],
         'files' => []
     ],
@@ -79,6 +80,14 @@ return [
                     ]
                 ]
             ]
+        ]
+    ],
+    'events' => [
+        'gallery:updated' => [
+            'admin-post' => 'AdminPost\\Event\\GalleryEvent::updated'
+        ],
+        'gallery:deleted' => [
+            'admin-post' => 'AdminPost\\Event\\GalleryEvent::updated'
         ]
     ],
     'formatter' => [
@@ -218,6 +227,12 @@ return [
             'category' => [
                 'type'      => 'post_checkbox-tree',
                 'label'     => 'Categories',
+                'rules'     => []
+            ],
+            'gallery' => [
+                'type'      => 'select-ajax',
+                'label'     => 'Gallery',
+                'source'    => 'adminGalleryFilter',
                 'rules'     => []
             ],
             'tag' => [

@@ -49,6 +49,13 @@ class PostController extends \AdminController
             'model' => 'PostCanal\\Model\\PostCanal',
             'perms' => 'read_post_canal',
             'opts'  => 'canals'
+        ],
+        'admin-gallery' => [
+            'prop'  => 'gallery',
+            'table' => 'gallery',
+            'model' => 'AdminGallery\\Model\\Gallery',
+            'perms' => 'read_gallery',
+            'opts'  => 'galleries'
         ]
     ];
     
@@ -58,7 +65,8 @@ class PostController extends \AdminController
         'post_category_chain'   => 'PostCategory\\Model\\PostCategoryChain',
         'post_history'          => 'AdminPost\\Model\\PostHistory',
         'post_statistic'        => 'Post\\Model\\PostStatistic',
-        'post_tag_chain'        => 'PostTag\\Model\\PostTagChain'
+        'post_tag_chain'        => 'PostTag\\Model\\PostTagChain',
+        'gallery'               => 'AdminGallery\\Model\\Gallery'
     ];
     
     private function _defaultParams(){
@@ -214,8 +222,9 @@ class PostController extends \AdminController
             
             if(!$oo_id)
                 continue;
-            
-            $oo_obj = $args['model']::get(['id'=>$oo_id], false);
+
+            $model = $args['model'];
+            $oo_obj = $model::get(['id'=>$oo_id], false);
             if($oo_obj)
                 $params[$args['opts']][$oo_obj->id] = $oo_obj->name;
         }
@@ -249,7 +258,8 @@ class PostController extends \AdminController
             $oo_ids = array_unique(array_merge($object_prop, $old->$prop));
             
             // now call event update of each object
-            $oo_obj = $args['model']::get(['id'=>$oo_ids], true);
+            $model = $args['model'];
+            $oo_obj = $model::get(['id'=>$oo_ids], true);
             if(!$oo_obj)
                 continue;
             foreach($oo_obj as $obj)
@@ -271,7 +281,8 @@ class PostController extends \AdminController
             if(!property_exists($object, $prop) || !$object->$prop)
                 continue;
             
-            $oo_obj = $args['model']::get(['id'=>$object->$prop], false);
+            $model = $args['model'];
+            $oo_obj = $model::get(['id'=>$object->$prop], false);
             if(!$oo_obj)
                 continue;
             $this->fire($module . ':updated', $oo_obj, $oo_obj);
@@ -361,9 +372,10 @@ class PostController extends \AdminController
         // insert and remove chains
         foreach($chains as $module => $args){
             $opt = $this->oo_chains[$module];
+            $chain = $opt['chain'];
             
             if($args['remove'])
-                $opt['chain']::remove([$opt['table'] => $args['remove'], 'post'=>$id]);
+                $chain::remove([$opt['table'] => $args['remove'], 'post'=>$id]);
             
             if(!$args['insert'])
                 continue;
@@ -371,7 +383,7 @@ class PostController extends \AdminController
             $oo_insert = [];
             foreach($args['insert'] as $oid)
                 $oo_insert[] = [ 'user' => $this->user->id, 'post' => $id, $opt['table'] => $oid];
-            $opt['chain']::createMany($oo_insert);
+            $chain::createMany($oo_insert);
         }
         
         $this->fire('post:'. $event, $object, $old);
