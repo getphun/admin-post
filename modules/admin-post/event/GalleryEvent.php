@@ -17,6 +17,8 @@ class GalleryEvent
         $posts = Post::get(['gallery'=>$id]);
         if(!$posts)
             return;
+        $dis = \Phun::$dispatcher;
+        
         Post::set(['gallery'=>null], ['gallery'=>$id]);
 
         foreach($posts as $post){
