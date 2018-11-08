@@ -375,7 +375,7 @@ class PostController extends \AdminController
             $chain = $opt['chain'];
             
             if($args['remove'])
-                $chain::remove([$opt['table'] => $args['remove'], 'post'=>$id]);
+                $chain::remove([$opt['table'] => array_values($args['remove']), 'post'=>$id]);
             
             if(!$args['insert'])
                 continue;
